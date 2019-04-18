@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huajj.mapper.SpecilMapper">
+    <cache/>
+    <resultMap id="myResultMap" type="specil">
+        <!--用id元素映射主键列-->
+        <id property="sid" column="spilinfoid"/>
+        <!--用result元素映射非主键列-->
+        <result property="did" column="depinfoid"/>
+        <result property="scode" column="spilinfocode"/>
+        <result property="sname" column="spilinfoname"/>
+        <result property="saim" column="spilinfoaim"/>
+        <result property="sprodire" column="spilinfoprodire"/>
+    </resultMap>
+
+
+    <select id="findSpecilById" parameterType="int" resultMap="myResultMap">
+      select * from specilinfo
+      where spilinfoid=#{id}
+    </select>
+
+    <select id="findAll" resultType="com.huajj.po.Specil" useCache="false">
+        select * from specilinfo
+    </select>
+
+    <select id="findAllSplit" parameterType="java.util.Map" resultMap="myResultMap">
+        select * from specilinfo
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="findAllSplit2" resultMap="myResultMap">
+      select * from specilinfo
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="findAllSplit3" parameterType="java.util.Map" resultMap="myResultMap">
+      select * from  specilinfo where ${colName} like concat('%',#{keyword},'%')
+        limit #{start},#{pageSize}
+    </select>
+
+
+    <select id="findAllSplit4" parameterType="java.util.Map" resultMap="myResultMap">
+        select * from specilinfo where 1=1
+            <!--<if test="username !=null and username !=''"> -->
+            <!--注意：用if时，test表达式不能含有$和#号!!!-->
+            <if test="colName !=null and keyword !=null">
+                and ${colName} like concat('%',#{keyword},'%')
+            </if>
+            <if test="start!=null and pageSize!=null">
+                limit #{start},#{pageSize}
+            </if>
+    </select>
+
+
+</mapper>
